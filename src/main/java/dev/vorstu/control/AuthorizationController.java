@@ -3,6 +3,7 @@ package dev.vorstu.control;
 import dev.vorstu.entity.*;
 import dev.vorstu.repositories.UserAccessRepository;
 import dev.vorstu.repositories.UserRepository;
+import dev.vorstu.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,13 @@ import java.util.Optional;
 public class AuthorizationController {
     private static final Logger log = LoggerFactory.getLogger(AuthorizationController.class);
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    UserAccessRepository userAccessRepository;
+    private UserAccessRepository userAccessRepository;
     @Autowired
-    JdbcTemplate jdbcTemplate;
-
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private UserService userService;
 
     @PostMapping(value = "/login")
     public Principal apiLogin(Principal user) {
@@ -45,6 +47,11 @@ public class AuthorizationController {
         String username = token.getName();
         String userIdQuery = "SELECT user_id FROM users_access WHERE login = ?";
         Long userId = jdbcTemplate.queryForObject(userIdQuery, new Object[] { username }, Long.class);
+
+        // Для обновления времени захода
+        User tempUser = new User();
+        userService.updateWasTheLastTime(userId);
+
         Map<String, Object> details = new HashMap<String, Object>();
         details.put("user_id", userId);
         ((AbstractAuthenticationToken) token).setDetails(details);
@@ -69,26 +76,13 @@ public class AuthorizationController {
         return userRepository.save(user);
     }
 
-//    @PostMapping(value = "/addLoginAndPass", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public boolean addUserAccess(@RequestBody UserAccessAndPass userAccessandPass) {
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//
-//        if (userAccessandPass == null || userAccessandPass.getPassword() == null) {
-//            throw new IllegalArgumentException("UserAccess or password must not be null");
-//        }
-//
-////        String hashedPassword = encoder.encode(userAccessandPass.getPassword());
-//        userAccessandPass.getUserAccess().setPassword(new Password(userAccessandPass.getPassword()));
-//        userAccessRepository.save(userAccessandPass.getUserAccess());
-//        return true;
-//    }
-
     @PostMapping(value = "/addLoginAndPass", produces = MediaType.APPLICATION_JSON_VALUE)
     public boolean addUserAccess(@RequestBody UserAccessAndPass userAccessAndPass) {
 
         // Если пользователь с таким логином уже существует
         Optional<UserAccess> existingUser = userAccessRepository.findByLogin(userAccessAndPass.getUserAccess().getLogin());
         if (existingUser.isPresent()) {
+            userRepository.deleteById(userAccessAndPass.getUserAccess().getUserId());
             return false;
         }
 

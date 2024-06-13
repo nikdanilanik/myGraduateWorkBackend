@@ -9,11 +9,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/base")
@@ -83,20 +92,25 @@ public class BaseController {
 
     private User updateUser(User user) {
         if(user.getId() == null) {
-            throw new RuntimeException("id of changing student cannot be null");
+            throw new RuntimeException("id of changing user cannot be null");
         }
 
-        User changingUser = getAllUsers().stream()
-                .filter(el -> Objects.equals(el.getId(), user.getId()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("user with id: " + user.getId() + "was not found"));
+//        User changingUser = getAllUsers().stream()
+//                .filter(el -> Objects.equals(el.getId(), user.getId()))
+//                .findFirst()
+//                .orElseThrow(() -> new RuntimeException("user with id: " + user.getId() + "was not found"));
 
-        changingUser.setFio(user.getFio());
-        changingUser.setInfo(user.getInfo());
-        changingUser.setDateOfRegistr(user.getDateOfRegistr());
-        changingUser.setWasTheLastTime(user.getWasTheLastTime());
-        changingUser.setAvatar(user.getAvatar());
-        return userRepository.save(changingUser);
+        Optional<User> changingUserOptional = userRepository.findById(user.getId());
+        if (changingUserOptional.isPresent()) {
+            User changingUser = changingUserOptional.get();changingUser.setFio(user.getFio());
+            changingUser.setInfo(user.getInfo());
+            changingUser.setDateOfRegistr(user.getDateOfRegistr());
+            changingUser.setWasTheLastTime(user.getWasTheLastTime());
+            changingUser.setAvatar(user.getAvatar());
+            return userRepository.save(changingUser);
+        } else {
+            throw new RuntimeException("user with id: " + user.getId() + "was not found");
+        }
     }
 
     @PutMapping(value = "users/updateForUsers", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -118,11 +132,19 @@ public class BaseController {
         return userRepository.save(changingUser);
     }
 
-//    @GetMapping(value = "user/filter", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public User getUserbyId(@RequestParam(value = "group") String group) {
-//        return getAllUsers().stream()
-//                .filter(el -> el.getGroup().equals(group))
-//                .findFirst()
-//                .orElse(null);
-//    }
+    // загрузка файла
+    @PostMapping("/upload")
+    public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
+        // Логика сохранения файла
+        try {
+            // Сохраните файл на сервере
+            String fileName = file.getOriginalFilename();
+            Path path = Paths.get("uploads/" + fileName);
+            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+            return ResponseEntity.ok("File uploaded successfully: " + fileName);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed");
+        }
+    }
 }

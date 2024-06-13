@@ -1,5 +1,7 @@
-package dev.vorstu.entity.forMessage;
+package dev.vorstu.entity.dtoFiles;
 
+import dev.vorstu.entity.forMessage.ChatMessage;
+import dev.vorstu.entity.forMessage.ChatMessageStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

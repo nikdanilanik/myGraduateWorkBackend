@@ -36,9 +36,9 @@ public class Initializer {
     public void initial() {
         // Генерация базовых пользователей
         User user1 = userRepository.saveAndFlush(new User("No Name", "Нету инфы", new Date(), new Date(1), "https://static10.tgstat.ru/channels/_0/64/6471e19cd8c9bbe4fbbd4ec33bf3d1f0.jpg"));
-        User user2 = userRepository.saveAndFlush(new User("Дед Инсайд", "Нету инфы", new Date(), new Date(1), "https://avavatar.ru/images/full/19/mrBXqhnN32kQnYeK.jpg"));
+        User user2 = userRepository.saveAndFlush(new User("Дед Хотабыч", "Нету инфы", new Date(), new Date(1), "https://avavatar.ru/images/full/19/mrBXqhnN32kQnYeK.jpg"));
         userRepository.saveAndFlush(new User("Какаши Хатаке", "Нету инфы", new Date(), new Date(1), "https://pixelbox.ru/wp-content/uploads/2021/09/cool-avatar-tik-tok-3.jpeg"));
-        userRepository.save(new User("Владимир Владимирович", "Нету инфы", new Date(), new Date(1),"https://static10.tgstat.ru/channels/_0/45/45b865d134d2c25cf5ed131317fe88de.jpg"));
+        userRepository.save(new User("Владимир Иванов", "Нету инфы", new Date(), new Date(1),"https://koshka.top/uploads/posts/2021-12/1640328596_1-koshka-top-p-kota-na-avatarku-1.jpg"));
         userRepository.save(new User("No Name", "Нету инфы", new Date(), new Date(1),"https://static10.tgstat.ru/channels/_0/64/6471e19cd8c9bbe4fbbd4ec33bf3d1f0.jpg"));
         userRepository.save(new User("No Name", "Нету инфы", new Date(), new Date(1),"https://static10.tgstat.ru/channels/_0/64/6471e19cd8c9bbe4fbbd4ec33bf3d1f0.jpg"));
         userRepository.save(new User("No Name", "Нету инфы", new Date(), new Date(1),"https://static10.tgstat.ru/channels/_0/64/6471e19cd8c9bbe4fbbd4ec33bf3d1f0.jpg"));
@@ -67,6 +67,28 @@ public class Initializer {
         chatRoomRepository.save(chatRoom1_2);
 
         // Генерация сообщений пользователей
+        chatMessageRepository.save(new ChatMessage(user1, "Привет", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user2, "Привет!", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user1, "Как твои дела?", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user2, "Отлично!", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user2, "А твои как?", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user1, "Да тоже всё хорошо", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user1, "Чем занимаешься?", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user2, "Да ничем интересным особо не занимаюсь", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user2, "Погулять думаю вот выйти", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user2, "А ты что делаешь?", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user2, "Не хочешь выйти погулять?", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user1, "Да я пока немного занят", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user1, "Помогаю тут по дому", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user1, "То пропылесосить, то с покушать приготовить помочь", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user1, "А погулять...", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user1, "Наверное, если я и смогу, то ближе к вечеру", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user2, "Отлично!", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user2, "Я как раз планировал до ночи гулять!", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user2, "Тогда напишешь, как освободишься, хорошо?", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user1, "Да, хорошо", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user1, "Спишемся тогда", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
+        chatMessageRepository.save(new ChatMessage(user2, "Да, спишемся", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
         chatMessageRepository.save(new ChatMessage(user1, "Привет", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
         chatMessageRepository.save(new ChatMessage(user2, "Привет!", chatRoom1_2, new Date(), ChatMessageStatus.SENT));
         chatMessageRepository.save(new ChatMessage(user1, "Как твои дела?", chatRoom1_2, new Date(), ChatMessageStatus.SENT));

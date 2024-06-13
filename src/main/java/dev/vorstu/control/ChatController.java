@@ -7,6 +7,7 @@ import dev.vorstu.repositories.ChatMessageRepository;
 import dev.vorstu.repositories.ChatRoomRepository;
 import dev.vorstu.repositories.UserRepository;
 import dev.vorstu.service.ChatService;
+import dev.vorstu.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class ChatController {
     private UserRepository userRepository;
     @Autowired
     private ChatMessageRepository chatMessageRepository;
+    @Autowired
+    private UserService userService;
+
     private static final Logger log = LoggerFactory.getLogger(ChatController.class);
 
     @MessageMapping("/chat.sendMessage")
@@ -50,6 +54,9 @@ public class ChatController {
         chatMessage.setChatRoom(chatRoom);
         chatMessage.setDateOfCreate(new Date());
 
+        // обновляем последнее посещение пользователем
+        userService.updateWasTheLastTime(user.getId());
+
         // Сохраняем сообщение
         ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
 
@@ -57,6 +64,7 @@ public class ChatController {
         messagingTemplate.convertAndSend("/user/" + chatRoom.getId() + "/public", savedMessage);
     }
 
+    // Можно использовать для user.status
     @MessageMapping("/chat.addUser")
     public void addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("user", chatMessage.getUser());

@@ -3,7 +3,7 @@ package dev.vorstu.service;
 import dev.vorstu.components.WebSocketEventListener;
 import dev.vorstu.entity.User;
 import dev.vorstu.entity.forMessage.ChatMessage;
-import dev.vorstu.entity.forMessage.ChatMessageDTO;
+import dev.vorstu.entity.dtoFiles.ChatMessageDTO;
 import dev.vorstu.entity.forMessage.ChatRoom;
 import dev.vorstu.repositories.ChatMessageRepository;
 import dev.vorstu.repositories.ChatRoomRepository;

@@ -16,10 +16,14 @@ public class WebSocketEventListener {
     private static final Logger logger = LoggerFactory.getLogger(WebSocketEventListener.class);
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
+
+    // Подключение к WebSocket
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
         logger.info("Received a new web socket connection");
     }
+
+    // Отключение от WebSocket
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
@@ -34,5 +38,4 @@ public class WebSocketEventListener {
             messagingTemplate.convertAndSend(destination, username);
         }
     }
-
 }
